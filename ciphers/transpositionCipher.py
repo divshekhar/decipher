@@ -106,11 +106,11 @@ class TranspositionCipher(object):
 
 
 if __name__ == "__main__":
-    msg = "This is a plain text message for transposition cipher."
+    msg = "India does not have formal diplomatic ties with Taiwan yet, as it follows the One-China policy. However, during then Chinese premier Wen Jiabao’s visit to India in December 2010, India did not mention support for the One-China policy in the joint communique."
     key = "87543216"
     tc: TranspositionCipher = TranspositionCipher()
     print(tc)
     cipher = TranspositionCipher.encrypt(msg, key)
     print(f"Encrypted Message: {cipher}")
-    decrypt = TranspositionCipher.decrypt(cipher, "62451789")
+    decrypt = TranspositionCipher.decrypt(cipher, "31895647")
     print(f"Decrypted Message: {decrypt}")
