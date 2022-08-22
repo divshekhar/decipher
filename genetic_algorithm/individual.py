@@ -1,8 +1,8 @@
 from __future__ import annotations
 import random
 from ciphers import transpositionCipher
-import dictionary.fitness as fitness
 import genetic_algorithm.units as units
+import dictionary.fitness as ft
 
 
 class Individual(object):
@@ -84,6 +84,6 @@ class Individual(object):
         DECRYPT: str = tc.decrypt(units.CIPHER, key)
 
         # Calculate fitness score
-        fitness = fitness.generateScore(DECRYPT)
+        fitness = ft.generateScore(DECRYPT)
 
         return fitness
