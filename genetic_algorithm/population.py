@@ -1,7 +1,6 @@
 from __future__ import annotations
 import random
 from genetic_algorithm.individual import Individual
-import genetic_algorithm.units as units
 
 class Population(object):
     '''
@@ -9,7 +8,7 @@ class Population(object):
     '''
 
     def __init__(self, individuals: list[Individual] = [], size: int = 100) -> None:
-        self.individuals = individuals
+        self.individuals = [*set(individuals)]
 
         if len(self.individuals) == 0:
             self.size = size
@@ -24,9 +23,17 @@ class Population(object):
         Initialize population with individuals
         '''
 
-        for _ in range(self.size):
+        s = 0
+
+        while s < self.size:
             gnome = Individual.create_gnome()
-            self.individuals.append(Individual(gnome))
+            individual = Individual(gnome)
+            self.individuals.append(individual)
+
+            # remove duplicate keys from the initial population
+            self.individuals = [*set(self.individuals)]
+            s = len(self.individuals)
+
     
     def evaluateFitness(self) -> None:
         '''
