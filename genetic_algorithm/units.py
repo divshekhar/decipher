@@ -8,4 +8,4 @@ CIPHER: str = "d rlth  oOa.rghreotic0ioorhhih q_ top tnsl nyenCpWaide2dniotCltti
     "_", " ")
 KEY_LENGTH: int = 8
 
-MUTATION_RATE = 0.9
+MUTATION_RATE = 0.5

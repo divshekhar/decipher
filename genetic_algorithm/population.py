@@ -17,12 +17,13 @@ class Population(object):
             self.size = len(individuals)
 
         self.generation: int = 1
-        self.max_fitness: float = 0
+        self.max_fitness_individual: Individual = Individual([])
 
     def initialize(self) -> None:
         '''
         Initialize population with individuals
         '''
+
         for _ in range(self.size):
             gnome = Individual.create_gnome()
             self.individuals.append(Individual(gnome))
@@ -31,15 +32,17 @@ class Population(object):
         '''
         Evaluate fitness of each individual in population
         '''
+
         for individual in self.individuals:
             individual.fitness = individual.cal_fitness()
-            if individual.fitness > self.max_fitness:
-                self.max_fitness = individual.fitness
+            if individual.fitness > self.max_fitness_individual.fitness:
+                self.max_fitness_individual = individual
     
     def sort(self) -> None:
         '''
         Sort individuals in population according to fitness score (descending order)
         '''
+
         self.individuals.sort(key=lambda x: x.fitness, reverse=True)
     
     def tournament_selection(self) -> tuple[Individual, Individual]:
@@ -48,6 +51,7 @@ class Population(object):
         parents size = population size / 2
         returns best two individuals from tournament
         '''
+
         parents = random.choices(self.individuals, k=int(self.size/2))
         parents.sort(key=lambda x: x.fitness, reverse=True)
         return parents[0], parents[1]
@@ -56,6 +60,7 @@ class Population(object):
         '''
         Crossover population
         '''
+
         new_generation: list[Individual] = []
         for _ in range(int(self.size/2)):
             parent1, parent2 = self.tournament_selection()
@@ -78,7 +83,19 @@ class Population(object):
         Perform elitism, keep top 10% of the fittest individuals from the population
         '''
 
-        return self.individuals[:int(self.size * 2/100)]
+        fittest_key = self.individuals[0].chromosome
+
+        elites: list[Individual] = [self.individuals[0]]
+        size = int(self.size * 5/100)
+
+        for individual in self.individuals:
+            if sorted(individual.chromosome) != sorted(fittest_key):
+                    elites.append(individual)
+            
+            if len(elites) == size:
+                break
+
+        return elites
 
         # From 50% of fittest population, Individuals
         # will mate to produce offspring

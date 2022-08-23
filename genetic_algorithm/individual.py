@@ -13,7 +13,7 @@ class Individual(object):
 
     def __init__(self, chromosome: list[str]) -> None:
         self.chromosome = chromosome
-        self.fitness: float = self.cal_fitness()
+        self.fitness: float = 0.0
 
     @classmethod
     def mutated_genes(self) -> str:

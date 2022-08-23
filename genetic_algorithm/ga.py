@@ -59,7 +59,16 @@ class GeneticAlgorithm(object):
         # create initial population
         self.population.initialize()
 
-        while self.generation != 50:
+
+        while self.generation <= 50:
+
+            self.population.evaluateFitness() 
+
+            self.population.sort()
+
+            # print("Current Population")
+            # for individual in self.population.individuals:
+            #     print(individual.chromosome, individual.fitness)
 
             # crossover
             new_population = self.population.crossover_population()
@@ -73,18 +82,26 @@ class GeneticAlgorithm(object):
             # add fittest population to new population
             new_population.individuals.extend(fittest_population)
 
-            self.population = new_population
-
+            # print info
             self.info()
 
+            # assign new population
+            self.population = new_population
+
+            # print("New Population")
+            # for individual in self.population.individuals:
+            #     print(individual.chromosome, individual.fitness)
+
+            # increment generation
             self.generation += 1
 
-        self.info()
-
+        # sort population
         self.population.sort()
+
+        # fittest key
         self.key = ''.join(self.population.individuals[0].chromosome)
 
         # Decrypt Using the key
         decrypt = transpositionCipher.TranspositionCipher().decrypt(units.CIPHER, self.key)
-        print(f"\n\nDecryption Key: {self.key} with fitness: {self.population.individuals[0].fitness}")
-        print(f"Decrypted Text: {decrypt}")
+        print(f"\n\nDecryption Key: {self.key} \tfitness: {self.population.individuals[0].fitness}\n")
+        print(f"Decrypted Text: {decrypt}\n")
