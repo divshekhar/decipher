@@ -36,15 +36,14 @@ class Individual(object):
         '''
         create chromosome or string of genes
         '''
-        gnome: list[str] = []
+        gnome: set[str] = set()
 
         # generate key with no repetitions
         while (len(gnome) != units.KEY_LENGTH):
             gene = self.mutated_genes()
-            if (gene not in gnome):
-                gnome.append(gene)
+            gnome.add(gene)
 
-        return gnome
+        return [*set(gnome)]
     
     def crossover(self, parent2: Individual) -> tuple[Individual, Individual]:
         '''
