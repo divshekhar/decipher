@@ -23,16 +23,7 @@ class Population(object):
         Initialize population with individuals
         '''
 
-        s = 0
-
-        while s < self.size:
-            gnome = Individual.create_gnome()
-            individual = Individual(gnome)
-            self.individuals.append(individual)
-
-            # remove duplicate keys from the initial population
-            self.individuals = [*set(self.individuals)]
-            s = len(self.individuals)
+        self.individuals = [Individual(Individual.create_gnome()) for _ in range(self.size)]
 
     
     def evaluateFitness(self) -> None:
@@ -75,8 +66,9 @@ class Population(object):
 
             new_generation.append(child1)
             new_generation.append(child2)
+        
+        return Population(individuals=new_generation)
 
-        return Population(new_generation)
     
     # Mutate population
     def mutate(self) -> None:
@@ -88,12 +80,12 @@ class Population(object):
 
     def elitism(self) -> list[Individual]:
         '''
-        Perform elitism, keep top 10% of the fittest individuals from the population
+        Perform elitism, keep top 5% of the fittest individuals from the population
         '''
 
         elites: set[Individual] = set()
 
-        size = int(self.size * 10/100)
+        size = int(self.size * 5/100)
 
         for individual in self.individuals:
             elites.add(individual)
@@ -102,15 +94,4 @@ class Population(object):
                 break
 
         return elites
-
-        # From 50% of fittest population, Individuals
-        # will mate to produce offspring
-        # s = int((99*self.size)/100)
-        # for _ in range(s):
-        #     parent1 = random.choice(self.individuals[:50])
-        #     parent2 = random.choice(self.individuals[:50])
-        #     child: Individual = parent1.mate(parent2)
-        #     new_generation.append(child)
-
-        # self.individuals = new_generation
             

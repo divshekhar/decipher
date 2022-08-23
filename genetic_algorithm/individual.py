@@ -111,7 +111,7 @@ class Individual(object):
         '''
         Perform mutation on individual
         '''
-        prob = random.random()
+        prob: float = random.random()
         if (prob < units.MUTATION_RATE):
             idx1: int = random.randint(0, units.KEY_LENGTH - 1)
             idx2: int = random.randint(0, units.KEY_LENGTH - 1)
@@ -125,7 +125,6 @@ class Individual(object):
         characters in string which differ from target
         string.
         '''
-        # global TARGET
         fitness: float = 0
 
         tc = transpositionCipher.TranspositionCipher()

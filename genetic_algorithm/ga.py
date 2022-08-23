@@ -63,6 +63,11 @@ class GeneticAlgorithm(object):
 
             self.population.evaluateFitness() 
 
+            # print
+            # print("Current Population")
+            # for individual in self.population.individuals:
+            #     print(individual.chromosome, individual.fitness)
+
             # crossover
             new_population = self.population.crossover_population()
 
@@ -77,11 +82,16 @@ class GeneticAlgorithm(object):
             # add fittest population to new population
             new_population.individuals.extend(fittest_population)
 
+
             # print info
             self.info()
-
+                
             # assign new population
             self.population = new_population
+
+            # print("New Population")
+            # for individual in self.population.individuals:
+            #     print(individual.chromosome, individual.fitness)
 
             # increment generation
             self.generation += 1
