@@ -59,12 +59,9 @@ class GeneticAlgorithm(object):
         # create initial population
         self.population.initialize()
 
-
-        while self.generation <= 50:
+        while self.generation <= 1000:
 
             self.population.evaluateFitness() 
-
-            self.population.sort()
 
             # print("Current Population")
             # for individual in self.population.individuals:
@@ -75,6 +72,8 @@ class GeneticAlgorithm(object):
 
             # mutate
             new_population.mutate()
+
+            self.population.sort()
 
             # Perform elitism
             fittest_population: list[Individual] = self.population.elitism()

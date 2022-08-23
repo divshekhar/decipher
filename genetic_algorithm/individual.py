@@ -14,6 +14,14 @@ class Individual(object):
     def __init__(self, chromosome: list[str]) -> None:
         self.chromosome = chromosome
         self.fitness: float = 0.0
+    
+    # hash overload
+    def __hash__(self) -> int:
+        return hash(''.join(self.chromosome))
+    
+    # eq overload
+    def __eq__(self, other: Individual) -> bool:
+        return ''.join(self.chromosome) == ''.join(other.chromosome)
 
     @classmethod
     def mutated_genes(self) -> str:
@@ -42,8 +50,13 @@ class Individual(object):
         '''
         Perform single point crossover and produce new offsprings
         '''
+        # if parents are with same chromosomes, 
+        # childs with random genes are returned
+        if self == parent2:
+            return Individual(self.create_gnome()), Individual(self.create_gnome())
+
         # crossover point
-        k = random.randint(1, units.KEY_LENGTH - 1)
+        k = random.randint(1, units.KEY_LENGTH - 2)
 
         # generate new chromosome for offspring
         child1: list[str] = self.chromosome

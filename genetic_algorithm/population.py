@@ -62,9 +62,10 @@ class Population(object):
         '''
 
         new_generation: list[Individual] = []
-        for _ in range(int(self.size/2)):
+        for i in range(int(self.size/2)):
             parent1, parent2 = self.tournament_selection()
             child1,child2 = parent1.crossover(parent2)
+
             new_generation.append(child1)
             new_generation.append(child2)
 
@@ -83,14 +84,12 @@ class Population(object):
         Perform elitism, keep top 10% of the fittest individuals from the population
         '''
 
-        fittest_key = self.individuals[0].chromosome
+        elites: set[Individual] = set()
 
-        elites: list[Individual] = [self.individuals[0]]
-        size = int(self.size * 5/100)
+        size = int(self.size * 10/100)
 
         for individual in self.individuals:
-            if sorted(individual.chromosome) != sorted(fittest_key):
-                    elites.append(individual)
+            elites.add(individual)
             
             if len(elites) == size:
                 break
