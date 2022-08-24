@@ -59,7 +59,7 @@ class GeneticAlgorithm(object):
         # create initial population
         self.population.initialize()
 
-        while self.generation < 1000:
+        while self.generation < 500:
 
             self.population.evaluateFitness() 
 

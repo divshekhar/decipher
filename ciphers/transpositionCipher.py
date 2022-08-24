@@ -106,11 +106,11 @@ class TranspositionCipher(object):
 
 
 if __name__ == "__main__":
-    msg = "In GAs, we have a pool or a population of possible solutions to the given problem. These solutions then undergo recombination and mutation (like in natural genetics), producing new children, and the process is repeated over various generations. Each individual (or candidate solution) is assigned a fitness value (based on its objective function value) and the fitter individuals are given a higher chance to mate and yield more “fitter” individuals. This is in line with the Darwinian Theory of “Survival of the Fittest”."
-    key = "21346578"
+    msg = "Traditional calculus based methods work by starting at a random point and by moving in the direction of the gradient, till we reach the top of the hill. This technique is efficient and works very well for single-peaked objective functions like the cost function in linear regression. But, in most real-world situations, we have a very complex problem called as landscapes, which are made of many peaks and many valleys, which causes such methods to fail, as they suffer from an inherent tendency of getting stuck at the local optima as shown in the following figure."
+    key = "52681374"
     tc: TranspositionCipher = TranspositionCipher()
     print(tc)
     cipher = TranspositionCipher.encrypt(msg, key)
     print(f"Encrypted Message: {cipher}")
-    decrypt = TranspositionCipher.decrypt(cipher, "21346578")
+    decrypt = TranspositionCipher.decrypt(cipher, "52681374")
     print(f"Decrypted Message: {decrypt}")
