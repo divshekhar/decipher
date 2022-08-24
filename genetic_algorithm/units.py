@@ -9,4 +9,6 @@ CIPHER: str = '''ne  a eoh .ssnet niaionddo daen uceosas(njf afnliiam oti.sehnoS
 
 KEY_LENGTH: int = 8
 
-MUTATION_RATE = 0.2
+MUTATION_RATE = 0.5
+
+CROSSOVER_RANDOMNESS_RATE = 0.5

@@ -52,7 +52,9 @@ class Individual(object):
         # if parents are with same chromosomes, 
         # childs with random genes are returned
         if self == parent2:
-            return Individual(self.create_gnome()), Individual(self.create_gnome())
+            prob = random.random()
+            if prob < units.CROSSOVER_RANDOMNESS_RATE:
+                return Individual(self.create_gnome()), Individual(self.create_gnome())
 
         # crossover point
         k = random.randint(1, units.KEY_LENGTH - 2)

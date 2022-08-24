@@ -63,6 +63,8 @@ class GeneticAlgorithm(object):
 
             self.population.evaluateFitness() 
 
+            self.population.sort()
+
             # print
             # if self.generation > 95:
             #     print("Current Population")

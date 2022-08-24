@@ -50,9 +50,8 @@ class Population(object):
         returns best two individuals from tournament
         '''
 
-        parents = random.choices(self.individuals, k=int(self.size/2))
-        parents.sort(key=lambda x: x.fitness, reverse=True)
-        return parents[0], parents[1]
+        parents = self.individuals[:int(self.size/2)]
+        return random.choice(parents), random.choice(parents)
     
     def crossover_population(self) -> Population:
         '''
@@ -82,8 +81,6 @@ class Population(object):
         '''
         Perform elitism, keep top 2% of the fittest individuals from the population
         '''
-
-        self.sort()
         
         elites: set[Individual] = set()
 
