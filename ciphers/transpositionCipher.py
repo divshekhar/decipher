@@ -106,11 +106,11 @@ class TranspositionCipher(object):
 
 
 if __name__ == "__main__":
-    msg = "India does not have formal diplomatic ties with Taiwan yet, as it follows the One-China policy. However, during then Chinese premier Wen Jiabao’s visit to India in December 2010, India did not mention support for the One-China policy in the joint communique."
-    key = "87543216"
+    msg = "In GAs, we have a pool or a population of possible solutions to the given problem. These solutions then undergo recombination and mutation (like in natural genetics), producing new children, and the process is repeated over various generations. Each individual (or candidate solution) is assigned a fitness value (based on its objective function value) and the fitter individuals are given a higher chance to mate and yield more “fitter” individuals. This is in line with the Darwinian Theory of “Survival of the Fittest”."
+    key = "21346578"
     tc: TranspositionCipher = TranspositionCipher()
     print(tc)
     cipher = TranspositionCipher.encrypt(msg, key)
     print(f"Encrypted Message: {cipher}")
-    decrypt = TranspositionCipher.decrypt(cipher, "31895647")
+    decrypt = TranspositionCipher.decrypt(cipher, "21346578")
     print(f"Decrypted Message: {decrypt}")

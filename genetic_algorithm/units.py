@@ -2,10 +2,11 @@
 POPULATION_SIZE: int = 100
 
 # Valid genes
-GENES: str = '''123456789'''
+GENES: str = "123456789"
 
-CIPHER: str = "d rlth  oOa.rghreotic0ioorhhih q_ top tnsl nyenCpWaide2dniotCltti_aoficiaaleicvi   bsnD n tp -o nn_in diww ohhierneraiI rIdnprepniu_d e t i,ftClwueseiv ne ieuon iom_ohmoi yiwn  , ien’ ae1atnteicecu_nsvlasat  -oodheiJ oib,dmsfOa jm.IeaameTetsepH tnm st m0     ny oe".replace(
+CIPHER: str = '''ne  a eoh .ssnet niaionddo daen uceosas(njf afnliiam oti.sehnoS F.Iwarlflitnm nurado rtr lnrsevgohd tia s ob n  iaghh dmtdsintie“l ”  patp nep o dcim nlcder cr rnsiaa ns  b euvnidsvgnayrev   eiruoi_Gho ioss rTlteoou(  suweteeoie.nlns)ifvaicnadti ehctieriTiw ayrft_svlonsltibetegb aiae,ic,eseeuaEi(ilintlesituteir r  l“ ui ta oite_Aaoposo gohuhrmntlng)c nhspvor d do giasttcl tvaneeee ”dhniDn v t_,e p iuovlsinoiatktn nh   arstavodusenud viehrdea tadfiaslhrTfvhs_  ouobt eeeo  nnieuepgiapit  icirat dee oeo)e u  con inl i wh aet_'''.replace(
     "_", " ")
+
 KEY_LENGTH: int = 8
 
-MUTATION_RATE = 0.5
+MUTATION_RATE = 0.2

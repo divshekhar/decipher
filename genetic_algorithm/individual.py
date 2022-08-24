@@ -105,8 +105,6 @@ class Individual(object):
 
         return child1, child2
 
-
-
     def mutate(self) -> None:
         '''
         Perform mutation on individual
@@ -116,8 +114,10 @@ class Individual(object):
             idx1: int = random.randint(0, units.KEY_LENGTH - 1)
             idx2: int = random.randint(0, units.KEY_LENGTH - 1)
 
-            # swap both index gene
-            self.chromosome[idx1], self.chromosome[idx2] = self.chromosome[idx2], self.chromosome[idx1]
+            if ((idx1 == idx2) or (self.chromosome[idx1] == self.chromosome[idx2])):
+                self.chromosome = self.create_gnome()
+            else:
+                self.chromosome[idx1], self.chromosome[idx2] = self.chromosome[idx2], self.chromosome[idx1]
 
     def cal_fitness(self) -> float:
         '''
