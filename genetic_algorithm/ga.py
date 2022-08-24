@@ -47,7 +47,7 @@ class GeneticAlgorithm(object):
         '''
         Print info about the generation
         '''
-        individual = self.population.individuals[0]
+        individual = self.population.max_fitness_individual
         self.key = ''.join(individual.chromosome)
         print(f"Generation: {self.generation}\tKey: {self.key}\tFitness: {individual.fitness}")
 
@@ -59,14 +59,15 @@ class GeneticAlgorithm(object):
         # create initial population
         self.population.initialize()
 
-        while self.generation <= 1000:
+        while self.generation < 1000:
 
             self.population.evaluateFitness() 
 
             # print
-            # print("Current Population")
-            # for individual in self.population.individuals:
-            #     print(individual.chromosome, individual.fitness)
+            # if self.generation > 95:
+            #     print("Current Population")
+            #     for individual in self.population.individuals:
+            #         print(individual.chromosome, individual.fitness)
 
             # crossover
             new_population = self.population.crossover_population()
@@ -74,14 +75,11 @@ class GeneticAlgorithm(object):
             # mutate
             new_population.mutate()
 
-            self.population.sort()
-
             # Perform elitism
             fittest_population: list[Individual] = self.population.elitism()
 
             # add fittest population to new population
             new_population.individuals.extend(fittest_population)
-
 
             # print info
             self.info()
@@ -89,20 +87,21 @@ class GeneticAlgorithm(object):
             # assign new population
             self.population = new_population
 
-            # print("New Population")
-            # for individual in self.population.individuals:
-            #     print(individual.chromosome, individual.fitness)
+            # if self.generation > 95:
+            #     print("New Population")
+            #     for individual in self.population.individuals:
+            #         print(individual.chromosome, individual.fitness)
 
             # increment generation
             self.generation += 1
-
-        # sort population
-        self.population.sort()
+        
+        self.population.evaluateFitness()
+        self.info()
 
         # fittest key
-        self.key = ''.join(self.population.individuals[0].chromosome)
+        self.key = ''.join(self.population.max_fitness_individual.chromosome)
 
         # Decrypt Using the key
         decrypt = transpositionCipher.TranspositionCipher().decrypt(units.CIPHER, self.key)
-        print(f"\n\nDecryption Key: {self.key} \tfitness: {self.population.individuals[0].fitness}\n")
+        print(f"\n\nDecryption Key: {self.key} \tfitness: {self.population.max_fitness_individual.fitness}\n")
         print(f"Decrypted Text: {decrypt}\n")

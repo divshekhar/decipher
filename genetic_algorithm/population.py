@@ -80,12 +80,14 @@ class Population(object):
 
     def elitism(self) -> list[Individual]:
         '''
-        Perform elitism, keep top 5% of the fittest individuals from the population
+        Perform elitism, keep top 2% of the fittest individuals from the population
         '''
 
+        self.sort()
+        
         elites: set[Individual] = set()
 
-        size = int(self.size * 5/100)
+        size = int(self.size * 2/100)
 
         for individual in self.individuals:
             elites.add(individual)
