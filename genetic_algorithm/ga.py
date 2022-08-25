@@ -1,18 +1,22 @@
 from ciphers import transpositionCipher
 from genetic_algorithm.individual import Individual
 from genetic_algorithm.population import Population
-import genetic_algorithm.units as units
 
 class GeneticAlgorithm(object):
     '''
     Genetic Algorithm to find the key of the transposition cipher
     '''
 
-    def __init__(self, population_size: int) -> None:
+    def __init__(self, population_size: int, cipher: str, key_length: int, genes: str, mutation_rate: float, crossover_randomness_rate: float) -> None:
         self.population_size = population_size
+        self.cipher = cipher
+        self.key_length = key_length
+        self.genes = genes
+        self.mutation_rate = mutation_rate
+        self.crossover_randomness_rate = crossover_randomness_rate
+
         self.key: str = ""
         self.generation: int = 1
-
         self.population = Population(size = self.population_size)
     
     def checkFitnessPlateau(generation_max_fitness: list[float]):
@@ -57,12 +61,14 @@ class GeneticAlgorithm(object):
         '''
 
         # create initial population
-        self.population.initialize()
+        self.population.initialize(self.genes, self.key_length)
 
         while self.generation < 500:
 
-            self.population.evaluateFitness() 
+            # Evaluate fitness of individuals of the population
+            self.population.evaluateFitness(self.cipher) 
 
+            # Sort individuals in decreasing order of their fitness score
             self.population.sort()
 
             # print
@@ -72,10 +78,10 @@ class GeneticAlgorithm(object):
             #         print(individual.chromosome, individual.fitness)
 
             # crossover
-            new_population = self.population.crossover_population()
+            new_population = self.population.crossover_population(self.genes, self.key_length, self.crossover_randomness_rate)
 
             # mutate
-            new_population.mutate()
+            new_population.mutate(self.genes, self.key_length, self.mutation_rate)
 
             # Perform elitism
             fittest_population: list[Individual] = self.population.elitism()
@@ -97,13 +103,16 @@ class GeneticAlgorithm(object):
             # increment generation
             self.generation += 1
         
-        self.population.evaluateFitness()
+        self.population.evaluateFitness(self.cipher)
+
+        # print info about the generation
+        # fittest individual's info gets printed
         self.info()
 
         # fittest key
         self.key = ''.join(self.population.max_fitness_individual.chromosome)
 
         # Decrypt Using the key
-        decrypt = transpositionCipher.TranspositionCipher().decrypt(units.CIPHER, self.key)
+        decrypt = transpositionCipher.TranspositionCipher().decrypt(self.cipher, self.key)
         print(f"\n\nDecryption Key: {self.key} \tfitness: {self.population.max_fitness_individual.fitness}\n")
         print(f"Decrypted Text: {decrypt}\n")

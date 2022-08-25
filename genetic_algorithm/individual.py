@@ -1,8 +1,6 @@
 from __future__ import annotations
-from csv import reader
 import random
 from ciphers import transpositionCipher
-import genetic_algorithm.units as units
 import dictionary.fitness as ft
 
 
@@ -13,6 +11,7 @@ class Individual(object):
 
     def __init__(self, chromosome: list[str]) -> None:
         self.chromosome = chromosome
+
         self.fitness: float = 0.0
     
     # hash overload
@@ -24,28 +23,28 @@ class Individual(object):
         return ''.join(self.chromosome) == ''.join(other.chromosome)
 
     @classmethod
-    def mutated_genes(self) -> str:
+    def mutated_genes(self, genes: str) -> str:
         '''
         create random genes for mutation
         '''
-        gene: str = random.choice(units.GENES)
+        gene: str = random.choice(genes)
         return gene
 
     @classmethod
-    def create_gnome(self) -> list[str]:
+    def create_gnome(self, genes: str, length: int) -> list[str]:
         '''
         create chromosome or string of genes
         '''
         gnome: set[str] = set()
 
         # generate key with no repetitions
-        while (len(gnome) != units.KEY_LENGTH):
-            gene = self.mutated_genes()
+        while (len(gnome) != length):
+            gene = self.mutated_genes(genes)
             gnome.add(gene)
 
         return [*set(gnome)]
     
-    def crossover(self, parent2: Individual) -> tuple[Individual, Individual]:
+    def crossover(self, parent2: Individual, genes: str, key_length: int, crossover_randomness_rate: float) -> tuple[Individual, Individual]:
         '''
         Perform single point crossover and produce new offsprings
         '''
@@ -53,29 +52,29 @@ class Individual(object):
         # childs with random genes are returned
         if self == parent2:
             prob = random.random()
-            if prob < units.CROSSOVER_RANDOMNESS_RATE:
-                return Individual(self.create_gnome()), Individual(self.create_gnome())
+            if prob < crossover_randomness_rate:
+                return Individual(self.create_gnome(genes, key_length)), Individual(self.create_gnome(genes, key_length))
 
         # crossover point
-        k = random.randint(1, units.KEY_LENGTH - 2)
+        k = random.randint(1, key_length - 2)
 
         # generate new chromosome for offspring
         child1: list[str] = self.chromosome
         child2: list[str] = parent2.chromosome
         
-        child1, child2 = self.generate_unique_child(child1, child2, k)
+        child1, child2 = self.generate_unique_child(child1, child2, k, key_length)
         
         return Individual(child1), Individual(child2)
     
-    def generate_unique_child(self, child1: list[str], child2: list[str], k: int) -> tuple[list[str], list[str]]:
+    def generate_unique_child(self, child1: list[str], child2: list[str], crossover_point: int, key_length: int) -> tuple[list[str], list[str]]:
         '''
         Generate unique child
         '''
-        root_gene1 = child1[:k]
-        root_gene2 = child2[:k]
+        root_gene1 = child1[:crossover_point]
+        root_gene2 = child2[:crossover_point]
 
-        rear_gene1 = child1[k:]
-        rear_gene2 = child2[k:]
+        rear_gene1 = child1[crossover_point:]
+        rear_gene2 = child2[crossover_point:]
 
         # if root_gene1 elements are same in rear_gene2, remove those elements
         for gene in root_gene1:
@@ -89,14 +88,14 @@ class Individual(object):
 
         # if root_gene2 elements are not in rear_gene2, add those elements
         for gene in root_gene2:
-            if len(root_gene1) + len(rear_gene2) == units.KEY_LENGTH:
+            if len(root_gene1) + len(rear_gene2) == key_length:
                 break
             if gene not in rear_gene2 + root_gene1:
                 rear_gene2.append(gene)
 
         # if root_gene1 elements are not in rear_gene1, add those elements
         for gene in root_gene1:
-            if len(root_gene2) + len(rear_gene1) == 8:
+            if len(root_gene2) + len(rear_gene1) == key_length:
                 break
             if gene not in rear_gene1 + root_gene2:
                 rear_gene1.append(gene)
@@ -107,21 +106,21 @@ class Individual(object):
 
         return child1, child2
 
-    def mutate(self) -> None:
+    def mutate(self, genes: str, key_length: int, mutation_rate: float) -> None:
         '''
         Perform mutation on individual
         '''
         prob: float = random.random()
-        if (prob < units.MUTATION_RATE):
-            idx1: int = random.randint(0, units.KEY_LENGTH - 1)
-            idx2: int = random.randint(0, units.KEY_LENGTH - 1)
+        if (prob < mutation_rate):
+            idx1: int = random.randint(0, key_length - 1)
+            idx2: int = random.randint(0, key_length - 1)
 
             if ((idx1 == idx2) or (self.chromosome[idx1] == self.chromosome[idx2])):
-                self.chromosome = self.create_gnome()
+                self.chromosome = self.create_gnome(genes, key_length)
             else:
                 self.chromosome[idx1], self.chromosome[idx2] = self.chromosome[idx2], self.chromosome[idx1]
 
-    def cal_fitness(self) -> float:
+    def cal_fitness(self, cipher: str) -> float:
         '''
         Calculate fitness score, it is the number of
         characters in string which differ from target
@@ -133,7 +132,7 @@ class Individual(object):
         key = ''.join(self.chromosome)
 
         # Decrypt cipher using key
-        DECRYPT: str = tc.decrypt(units.CIPHER, key)
+        DECRYPT: str = tc.decrypt(cipher, key)
 
         # Calculate fitness score
         fitness = ft.generateScore(DECRYPT)

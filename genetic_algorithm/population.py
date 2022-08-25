@@ -18,21 +18,21 @@ class Population(object):
         self.generation: int = 1
         self.max_fitness_individual: Individual = Individual([])
 
-    def initialize(self) -> None:
+    def initialize(self, genes: str, key_length: int) -> None:
         '''
         Initialize population with individuals
         '''
 
-        self.individuals = [Individual(Individual.create_gnome()) for _ in range(self.size)]
+        self.individuals = [Individual(Individual.create_gnome(genes, key_length)) for _ in range(self.size)]
 
     
-    def evaluateFitness(self) -> None:
+    def evaluateFitness(self, cipher: str) -> None:
         '''
         Evaluate fitness of each individual in population
         '''
 
         for individual in self.individuals:
-            individual.fitness = individual.cal_fitness()
+            individual.fitness = individual.cal_fitness(cipher)
             if individual.fitness > self.max_fitness_individual.fitness:
                 self.max_fitness_individual = individual
     
@@ -53,7 +53,7 @@ class Population(object):
         parents = self.individuals[:int(self.size/2)]
         return random.choice(parents), random.choice(parents)
     
-    def crossover_population(self) -> Population:
+    def crossover_population(self, genes: str, key_length: int, randomness_rate: float = 0.5) -> Population:
         '''
         Crossover population
         '''
@@ -61,7 +61,7 @@ class Population(object):
         new_generation: list[Individual] = []
         for i in range(int(self.size/2)):
             parent1, parent2 = self.tournament_selection()
-            child1,child2 = parent1.crossover(parent2)
+            child1,child2 = parent1.crossover(parent2, genes, key_length, randomness_rate)
 
             new_generation.append(child1)
             new_generation.append(child2)
@@ -70,12 +70,12 @@ class Population(object):
 
     
     # Mutate population
-    def mutate(self) -> None:
+    def mutate(self, genes: str, key_length: int, rate: float) -> None:
         '''
         Mutate population by swaping genes
         '''
         for individual in self.individuals:
-            individual.mutate()
+            individual.mutate(genes, key_length, rate)
 
     def elitism(self) -> list[Individual]:
         '''
