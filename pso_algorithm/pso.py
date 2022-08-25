@@ -2,24 +2,26 @@
 # minimizing rastrigin and sphere function
 
 import random
-import math # cos() for Rastrigin
-import copy # array-copying convenience
+import math  # cos() for Rastrigin
+import copy  # array-copying convenience
 import sys	 # max float
 
 
-#-------fitness functions---------
+# -------fitness functions---------
 
 # rastrigin function
 def fitness_rastrigin(position):
-    fitnessVal = 0.0
+    fitness_val = 0.0
     for i in range(len(position)):
         xi = position[i]
-        fitnessVal += (xi * xi) - (10 * math.cos(2 * math.pi * xi)) + 10
+        fitness_val += (xi * xi) - (10 * math.cos(2 * math.pi * xi)) + 10
     return fitnessVal
 
-#-------------------------
+# -------------------------
 
-#particle class
+# particle class
+
+
 class Particle:
     def __init__(self, fitness: callable, dim: int, minx: float, maxx: float, seed: int) -> None:
         self.rnd = random.Random(seed)
@@ -40,18 +42,20 @@ class Particle:
             self.velocity[i] = ((maxx - minx) * self.rnd.random() + minx)
 
         # compute fitness of particle
-        self.fitness = fitness(self.position) # curr fitness
+        self.fitness = fitness(self.position)  # curr fitness
 
         # initialize best position and fitness of this particle
         self.best_part_pos = copy.copy(self.position)
-        self.best_part_fitnessVal = self.fitness # best fitness
+        self.best_part_fitness_val = self.fitness  # best fitness
 
 # particle swarm optimization function
-def pso(fitness, max_iter, n, dim, minx, maxx):
+
+
+def pso(fitness: callable, max_iter, n, dim, minx, maxx):
     # hyper parameters
-    w = 0.729 # inertia
-    c1 = 1.49445 # cognitive (particle)
-    c2 = 1.49445 # social (swarm)
+    w: float = 0.729  # inertia
+    c1: float = 1.49445  # cognitive (particle)
+    c2 = 1.49445  # social (swarm)
 
     rnd = random.Random(0)
 
@@ -59,37 +63,38 @@ def pso(fitness, max_iter, n, dim, minx, maxx):
     swarm = [Particle(fitness, dim, minx, maxx, i) for i in range(n)]
 
     # compute the value of best_position and best_fitness in swarm
-    best_swarm_pos = [0.0 for i in range(dim)]
-    best_swarm_fitnessVal = sys.float_info.max # swarm best
+    best_swarm_pos = [0.0 for _ in range(dim)]
+    best_part_fitness_val = sys.float_info.max  # swarm best
 
     # computer best particle of swarm and it's fitness
-    for i in range(n): # check each particle
-        if swarm[i].fitness < best_swarm_fitnessVal:
-            best_swarm_fitnessVal = swarm[i].fitness
+    for i in range(n):  # check each particle
+        if swarm[i].fitness < best_part_fitness_val:
+            best_part_fitness_val = swarm[i].fitness
             best_swarm_pos = copy.copy(swarm[i].position)
 
     # main loop of pso
-    Iter = 0
-    while Iter < max_iter:
-        
+    iterations = 0
+    while iterations < max_iter:
+
         # after every 10 iterations
         # print iteration number and best fitness value so far
-        if Iter % 10 == 0 and Iter > 1:
-            print("Iter = " + str(Iter) + " best fitness = %.3f" % best_swarm_fitnessVal)
+        if iterations % 10 == 0 and iterations > 1:
+            print("Iter = " + str(Iter) + " best fitness = %.3f" %
+                  best_part_fitness_val)
 
-        for i in range(n): # process each particle
-        
+        for i in range(n):  # process each particle
+
             # compute new velocity of curr particle
             for k in range(dim):
-                r1 = rnd.random() # randomizations
+                r1 = rnd.random()  # randomizations
                 r2 = rnd.random()
-            
-                swarm[i].velocity[k] = (
-                                        (w * swarm[i].velocity[k]) +
-                                        (c1 * r1 * (swarm[i].best_part_pos[k] - swarm[i].position[k])) +
-                                        (c2 * r2 * (best_swarm_pos[k] -swarm[i].position[k]))
-                                    )
 
+                swarm[i].velocity[k] = (
+                    (w * swarm[i].velocity[k]) +
+                    (c1 * r1 * (swarm[i].best_part_pos[k] - swarm[i].position[k])) +
+                    (c2 * r2 *
+                     (best_swarm_pos[k] - swarm[i].position[k]))
+                )
 
                 # if velocity[k] is not in [minx, max]
                 # then clip it
@@ -97,7 +102,6 @@ def pso(fitness, max_iter, n, dim, minx, maxx):
                     swarm[i].velocity[k] = minx
                 elif swarm[i].velocity[k] > maxx:
                     swarm[i].velocity[k] = maxx
-
 
         # compute new position using new velocity
         for k in range(dim):
@@ -112,18 +116,18 @@ def pso(fitness, max_iter, n, dim, minx, maxx):
             swarm[i].best_part_pos = copy.copy(swarm[i].position)
 
         # is new position a new best overall?
-        if swarm[i].fitness < best_swarm_fitnessVal:
-            best_swarm_fitnessVal = swarm[i].fitness
+        if swarm[i].fitness < best_part_fitness_val:
+            best_part_fitness_val = swarm[i].fitness
             best_swarm_pos = copy.copy(swarm[i].position)
-        
+
         # for-each particle
         Iter += 1
-    #end_while
+    # end_while
     return best_swarm_pos
     # end pso
 
 
-#----------------------------
+# ----------------------------
 # Driver code for rastrigin function
 
 print("\nBegin particle swarm optimization on rastrigin function\n")
@@ -145,12 +149,11 @@ print("Setting max_iter = " + str(max_iter))
 print("\nStarting PSO algorithm\n")
 
 
-
 best_position = pso(fitness, max_iter, num_particles, dim, -10.0, 10.0)
 
 print("\nPSO completed\n")
 print("\nBest solution found:")
-print(["%.6f"%best_position[k] for k in range(dim)])
+print(["%.6f" % best_position[k] for k in range(dim)])
 fitnessVal = fitness(best_position)
 print("fitness of best solution = %.6f" % fitnessVal)
 
