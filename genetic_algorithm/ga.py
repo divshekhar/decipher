@@ -97,7 +97,7 @@ class GeneticAlgorithm(object):
             # increment generation
             self.generation += 1
 
-        self.population.evaluateFitness(self.cipher)
+        self.population.evaluate_fitness(self.cipher)
 
         # print info about the generation
         # fittest individual's info gets printed
