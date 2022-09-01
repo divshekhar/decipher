@@ -62,4 +62,3 @@ class PSO(object):
             iteration += 1
         
         return self.gbest
-

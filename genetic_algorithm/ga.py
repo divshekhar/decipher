@@ -2,12 +2,14 @@ from ciphers import transpositionCipher
 from genetic_algorithm.individual import Individual
 from genetic_algorithm.population import Population
 
+
 class GeneticAlgorithm(object):
     '''
     Genetic Algorithm to find the key of the transposition cipher
     '''
 
-    def __init__(self, population_size: int, cipher: str, key_length: int, genes: str, mutation_rate: float, crossover_randomness_rate: float) -> None:
+    def __init__(self, gens: int, population_size: int, cipher: str, key_length: int, genes: str, mutation_rate: float, crossover_randomness_rate: float) -> None:
+        self.gens = gens
         self.population_size = population_size
         self.cipher = cipher
         self.key_length = key_length
@@ -17,9 +19,9 @@ class GeneticAlgorithm(object):
 
         self.key: str = ""
         self.generation: int = 1
-        self.population = Population(size = self.population_size)
-    
-    def checkFitnessPlateau(generation_max_fitness: list[float]):
+        self.population = Population(size=self.population_size)
+
+    def check_fitness_plateau(self, generation_max_fitness: list[float]):
         '''
         Check if the fitness score is plateaued
         '''
@@ -53,7 +55,8 @@ class GeneticAlgorithm(object):
         '''
         individual = self.population.max_fitness_individual
         self.key = ''.join(individual.chromosome)
-        print(f"Generation: {self.generation}\tKey: {self.key}\tFitness: {individual.fitness}")
+        print(
+            f"Generation: {self.generation}\tKey: {self.key}\tFitness: {individual.fitness}")
 
     def run(self) -> None:
         '''
@@ -63,25 +66,21 @@ class GeneticAlgorithm(object):
         # create initial population
         self.population.initialize(self.genes, self.key_length)
 
-        while self.generation < 500:
+        while self.generation < self.gens:
 
             # Evaluate fitness of individuals of the population
-            self.population.evaluateFitness(self.cipher) 
+            self.population.evaluate_fitness(self.cipher)
 
             # Sort individuals in decreasing order of their fitness score
             self.population.sort()
 
-            # print
-            # if self.generation > 95:
-            #     print("Current Population")
-            #     for individual in self.population.individuals:
-            #         print(individual.chromosome, individual.fitness)
-
             # crossover
-            new_population = self.population.crossover_population(self.genes, self.key_length, self.crossover_randomness_rate)
+            new_population = self.population.crossover_population(
+                self.genes, self.key_length, self.crossover_randomness_rate)
 
             # mutate
-            new_population.mutate(self.genes, self.key_length, self.mutation_rate)
+            new_population.mutate(
+                self.genes, self.key_length, self.mutation_rate)
 
             # Perform elitism
             fittest_population: list[Individual] = self.population.elitism()
@@ -89,20 +88,15 @@ class GeneticAlgorithm(object):
             # add fittest population to new population
             new_population.individuals.extend(fittest_population)
 
-            # print info
+            # info
             self.info()
-                
+
             # assign new population
             self.population = new_population
 
-            # if self.generation > 95:
-            #     print("New Population")
-            #     for individual in self.population.individuals:
-            #         print(individual.chromosome, individual.fitness)
-
             # increment generation
             self.generation += 1
-        
+
         self.population.evaluateFitness(self.cipher)
 
         # print info about the generation
@@ -114,5 +108,6 @@ class GeneticAlgorithm(object):
 
         # Decrypt Using the key
         decrypt = transpositionCipher.TranspositionCipher().decrypt(self.cipher, self.key)
-        print(f"\n\nDecryption Key: {self.key} \tfitness: {self.population.max_fitness_individual.fitness}\n")
+        print(
+            f"\n\nDecryption Key: {self.key} \tfitness: {self.population.max_fitness_individual.fitness}\n")
         print(f"Decrypted Text: {decrypt}\n")

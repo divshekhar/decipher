@@ -13,17 +13,17 @@ class Individual(object):
         self.chromosome = chromosome
 
         self.fitness: float = 0.0
-    
+
     # hash overload
     def __hash__(self) -> int:
         return hash(''.join(self.chromosome))
-    
+
     # eq overload
     def __eq__(self, other: Individual) -> bool:
         return ''.join(self.chromosome) == ''.join(other.chromosome)
 
     @classmethod
-    def mutated_genes(self, genes: str) -> str:
+    def mutated_genes(cls, genes: str) -> str:
         '''
         create random genes for mutation
         '''
@@ -31,7 +31,7 @@ class Individual(object):
         return gene
 
     @classmethod
-    def create_gnome(self, genes: str, length: int) -> list[str]:
+    def create_gnome(cls, genes: str, length: int) -> list[str]:
         '''
         create chromosome or string of genes
         '''
@@ -39,16 +39,16 @@ class Individual(object):
 
         # generate key with no repetitions
         while (len(gnome) != length):
-            gene = self.mutated_genes(genes)
+            gene = cls.mutated_genes(genes)
             gnome.add(gene)
 
         return [*set(gnome)]
-    
+
     def crossover(self, parent2: Individual, genes: str, key_length: int, crossover_randomness_rate: float) -> tuple[Individual, Individual]:
         '''
         Perform single point crossover and produce new offsprings
         '''
-        # if parents are with same chromosomes, 
+        # if parents are with same chromosomes,
         # childs with random genes are returned
         if self == parent2:
             prob = random.random()
@@ -61,11 +61,12 @@ class Individual(object):
         # generate new chromosome for offspring
         child1: list[str] = self.chromosome
         child2: list[str] = parent2.chromosome
-        
-        child1, child2 = self.generate_unique_child(child1, child2, k, key_length)
-        
+
+        child1, child2 = self.generate_unique_child(
+            child1, child2, k, key_length)
+
         return Individual(child1), Individual(child2)
-    
+
     def generate_unique_child(self, child1: list[str], child2: list[str], crossover_point: int, key_length: int) -> tuple[list[str], list[str]]:
         '''
         Generate unique child
@@ -138,7 +139,7 @@ class Individual(object):
         fitness = ft.generateScore(DECRYPT)
 
         return fitness
-    
+
     def mate(self, parent2: Individual) -> Individual:
         '''
         Perform mating and produce new offspring
