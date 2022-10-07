@@ -55,9 +55,10 @@ class PSO(object):
             
             # shift position
             for _ in range(self.key_length):
-                position_shifted_particle = self.gbest.shift_position(1)
+                position_shifted_particle = self.gbest.shift_position()
                 if position_shifted_particle.fitness > self.gbest.fitness:
                     self.gbest = position_shifted_particle
+                    print(f"After Shifting: {position_shifted_particle.position}: fitness = {position_shifted_particle.fitness}")
             
             iteration += 1
         

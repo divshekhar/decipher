@@ -7,7 +7,7 @@ CIPHER: str = '''ic eotadt ii g,etoisqf kw pb nt neeBmlsnareedd ropdawuhslernnne
 
 key_length = 8
 swarm_size = 10
-max_iteration = 100
+max_iteration = 500
 
 print("\nBegin PSO for finding transposition cipher key\n")
 print("Setting num_particles = " + str(swarm_size))
