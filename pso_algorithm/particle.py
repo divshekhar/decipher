@@ -59,9 +59,9 @@ class Particle(object):
         Update position of particle
         '''
         
-        for i in range(1, len(self.position)):
+        for i in range(len(self.position) - 2):
             # new position = old position + velocity
-            new_position = int(self.position[i - 1] + self.velocity[i])
+            new_position = int(self.position[i] + self.velocity[i])
             # check if new position is within bounds
             if new_position > self.kmax or new_position < self.kmin:
                 # create new position within bounds
@@ -72,12 +72,12 @@ class Particle(object):
                 # update position
                 new_position = key
         
-            self.position[i] = new_position
+            self.position[i+1] = new_position
         
         # Evaluate fitness of the particle
         self.evaluate_fitness(self.cipher)
     
-    def shift_position(self) -> Particle:
+    def random_shift_position(self) -> Particle:
         '''
         Shift position of particle
         '''
@@ -88,6 +88,22 @@ class Particle(object):
         # shift position
         offset: int = random.randint(2, len(position) - 2)
         
+        # circular shift position
+        particle.position = position[offset:] + position[:offset]
+        
+        # Evaluate fitness of the particle
+        particle.evaluate_fitness(self.cipher)
+
+        return particle
+    
+    def left_shift_position(self, offset: int) -> Particle:
+        '''
+        Shift position of particle
+        '''
+
+        particle = copy.copy(self)
+        position = particle.position
+
         # circular shift position
         particle.position = position[offset:] + position[:offset]
         

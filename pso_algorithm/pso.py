@@ -39,27 +39,32 @@ class PSO(object):
         iteration = 0
         while iteration <= self.max_iteration:
 
+            # Print info every 10 iterations
             if iteration % 10 == 0 and iteration > 1:
                 key = "".join([str(i) for i in self.gbest.position])
                 self.info(iteration, key, self.gbest.fitness)
 
             for particle in self.swarm:
+                # Update velocity
                 particle.update_velocity(self.w, self.c1, self.c2, self.pbest, self.gbest)
+                # Update position
                 particle.update_position()
 
+                # update pbest if the particle has a better fitness than the current pbest
                 if particle.fitness > self.pbest.fitness:
                     self.pbest = particle
 
+                # update gbest if the particle has a better fitness than the current gbest
                 if particle.fitness > self.gbest.fitness:
                     self.gbest = particle
             
             # shift position
             for _ in range(self.key_length):
-                position_shifted_particle = self.gbest.shift_position()
+                position_shifted_particle = self.gbest.random_shift_position()
                 if position_shifted_particle.fitness > self.gbest.fitness:
                     self.gbest = position_shifted_particle
-                    print(f"After Shifting: {position_shifted_particle.position}: fitness = {position_shifted_particle.fitness}")
             
+            # increment iteration
             iteration += 1
         
         return self.gbest
