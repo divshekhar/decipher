@@ -15,11 +15,11 @@ class Individual(object):
         self.fitness_func = fitness
 
         # initialize position of the particle
-        k: set[int] = set()
-        while len(k) < key_length:
-            k.add(random.randint(kmin, kmax))
-
-        self.key: list[int] = list(k)
+        self.key: list[int] = list()
+        while len(self.key) < key_length:
+            k: int = random.randint(kmin, kmax)
+            if k not in self.key:
+                self.key.append(k)
         
         # Evaluate fitness of the particle
         self.evaluate_fitness(self.cipher)
