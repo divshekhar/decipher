@@ -15,12 +15,12 @@ class Particle(object):
         self.fitness: float = 0.0
 
         # initialize position of the particle
-        key: set[int] = set()
-        while len(key) < key_length:
-            key.add(random.randint(kmin, kmax))
+        self.position: list[int] = list()
+        while len(self.position) < key_length:
+            k: int = random.randint(kmin, kmax)
+            if k not in self.position:
+                self.position.append(k)
         
-        self.position: list[int] = list(key)
-
         # initialize velocity of the particle
         self.velocity: list[float] = [((vmax - vmin) * random.random() + vmin) for _ in range(key_length)]
 
