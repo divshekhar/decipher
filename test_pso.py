@@ -1,3 +1,4 @@
+import time
 from ciphers import transpositionCipher
 from pso_algorithm.particle import Particle
 from pso_algorithm.pso import PSO
@@ -14,9 +15,13 @@ print("Setting num_particles = " + str(swarm_size))
 print("Setting max_iterarion = " + str(max_iteration))
 print("\n-------------Starting PSO algorithm-------------\n")
 
+# start clock
+start_time = time.time()
 pso = PSO(CIPHER, generateScore, swarm_size, max_iteration, key_length)
-
 best_particle: list[Particle] = pso.run()
+# end clock
+end_time = time.time()
+
 key = "".join([str(i) for i in best_particle.position])
 
 print("\n-------------PSO algorithm completed-------------\n")
@@ -26,3 +31,6 @@ print("\nBest Key Found:")
 decrypt = transpositionCipher.TranspositionCipher().decrypt(CIPHER, key)
 print(f"\n\nDecryption Key: {key} \tfitness: {best_particle.fitness}\n")
 print(f"Decrypted Text: {decrypt}\n")
+
+# Print the time taken to run the algorithm
+print(f"Execution time of the algorithm: {end_time - start_time} seconds")

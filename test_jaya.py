@@ -1,6 +1,6 @@
+import time
 from ciphers import transpositionCipher
-from pso_algorithm.particle import Particle
-from pso_algorithm.pso import PSO
+from jaya_algorithm.individual import Individual
 from jaya_algorithm.jaya import JAYA
 from dictionary.fitness import generateScore
 
@@ -8,16 +8,20 @@ CIPHER: str = '''ic eotadt ii g,etoisqf kw pb nt neeBmlsnareedd ropdawuhslernnne
 
 key_length = 8
 population_size = 100
-max_iteration = 100
+max_iteration = 500
 
 print("\nBegin JAYA for finding transposition cipher key\n")
 print("Setting num_particles = " + str(population_size))
 print("Setting max_iterarion = " + str(max_iteration))
 print("\n-------------Starting JAYA algorithm-------------\n")
 
+# start clock
+start_time = time.time()
 jaya = JAYA(CIPHER, generateScore, population_size, max_iteration, key_length)
+best_individual: Individual = jaya.run()
+# end clock
+end_time = time.time()
 
-best_individual: list[Particle] = jaya.run()
 key = "".join([str(i) for i in best_individual.key])
 
 print("\n-------------JAYA algorithm completed-------------\n")
@@ -27,3 +31,6 @@ print("\nBest Key Found:")
 decrypt = transpositionCipher.TranspositionCipher().decrypt(CIPHER, key)
 print(f"\n\nDecryption Key: {key} \tfitness: {best_individual.fitness}\n")
 print(f"Decrypted Text: {decrypt}\n")
+
+# Print the time taken to run the algorithm
+print(f"Execution time of the algorithm: {end_time - start_time} seconds")
