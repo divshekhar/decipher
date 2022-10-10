@@ -1,6 +1,5 @@
 import copy
 import random
-from re import S
 from jaya_algorithm.individual import Individual
 
 class JAYA(object):
