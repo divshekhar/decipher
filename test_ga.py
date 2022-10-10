@@ -1,24 +1,36 @@
 import time
-from genetic_algorithm.ga import GeneticAlgorithm
+from ciphers import transpositionCipher
+from genetic_algorithm.individual import Individual
+from genetic_algorithm.ga import GA
+from dictionary.fitness import generateScore
 
-# Valid genes
-GENES: str = "123456789"
+CIPHER: str = '''ic eotadt ii g,etoisqf kw pb nt neeBmlsnareedd ropdawuhslernnnettl n neraldsynro neihelcoeThsewrflditkotlenirlte mollehdn ys shf fmenfgaoihtogtabtrato mnror  hfl ufasesejfshf asuo-isvyxm swefe lhs  ,y  tctuh a fg.ocso ta nvtc die t.e cdvlnkcnl nn i,tou  cpcsaimmkaecseoasrnt ik p nlf_Tnuedbi pdihttilath cii e getcicc ro  rawaora pcaasnyh t suoheon lts lialu   gaibg oen hp hn noyoe viesiig.nedi vpblas eya ,cuoatf rd  tcmohwuilahkr mao efatre ltein liaeu euirstswt,e   ach  amliemt  fi ytceosio _d smws nny dn tw  hiietr r-oeo tonr  a ohellen,a  nv acdiheaeegs aaweir'''.replace("_", " ")
 
-# CIPHER: str = '''ne  a eoh .ssnet niaionddo daen uceosas(njf afnliiam oti.sehnoS F.Iwarlflitnm nurado rtr lnrsevgohd tia s ob n  iaghh dmtdsintie“l ”  patp nep o dcim nlcder cr rnsiaa ns  b euvnidsvgnayrev   eiruoi_Gho ioss rTlteoou(  suweteeoie.nlns)ifvaicnadti ehctieriTiw ayrft_svlonsltibetegb aiae,ic,eseeuaEi(ilintlesituteir r  l“ ui ta oite_Aaoposo gohuhrmntlng)c nhspvor d do giasttcl tvaneeee ”dhniDn v t_,e p iuovlsinoiatktn nh   arstavodusenud viehrdea tadfiaslhrTfvhs_  ouobt eeeo  nnieuepgiapit  icirat dee oeo)e u  con inl i wh aet_'''.replace(
-#     "_", " ")
+key_length = 8
+population_size = 100
+max_generation = 500
 
-# CIPHER: str = '''ne  a eoh .ssnet niaionddo daen uceosas(njf afnliiam oti.sehnoS F.,e p iuovlsinoiatktn nh   arstavodusenud viehrdea tadfiaslhrTfvhs_Gho ioss rTlteoou(  suweteeoie.nlns)ifvaicnadti ehctieriTiw ayrft_  ouobt eeeo  nnieuepgiapit  icirat dee oeo)e u  con inl i wh aet_svlonsltibetegb aiae,ic,eseeuaEi(ilintlesituteir r  l“ ui ta oite_Aaoposo gohuhrmntlng)c nhspvor d do giasttcl tvaneeee ”dhniDn v t_Iwarlflitnm nurado rtr lnrsevgohd tia s ob n  iaghh dmtdsintie“l ”  patp nep o dcim nlcder cr rnsiaa ns  b euvnidsvgnayrev   eiruoi_'''.replace(
-#     "_", " ")
-
-CIPHER: str = '''ic eotadt ii g,etoisqf kw pb nt neeBmlsnareedd ropdawuhslernnnettl n neraldsynro neihelcoeThsewrflditkotlenirlte mollehdn ys shf fmenfgaoihtogtabtrato mnror  hfl ufasesejfshf asuo-isvyxm swefe lhs  ,y  tctuh a fg.ocso ta nvtc die t.e cdvlnkcnl nn i,tou  cpcsaimmkaecseoasrnt ik p nlf_Tnuedbi pdihttilath cii e getcicc ro  rawaora pcaasnyh t suoheon lts lialu   gaibg oen hp hn noyoe viesiig.nedi vpblas eya ,cuoatf rd  tcmohwuilahkr mao efatre ltein liaeu euirstswt,e   ach  amliemt  fi ytceosio _d smws nny dn tw  hiietr r-oeo tonr  a ohellen,a  nv acdiheaeegs aaweir'''.replace(
-    "_", " ")
+print("\nBegin GA for finding transposition cipher key\n")
+print("Setting population_size = " + str(population_size))
+print("Setting max_generation = " + str(max_generation))
+print("\n-------------Starting GA algorithm-------------\n")
 
 # start clock
 start_time = time.time()
-ga = GeneticAlgorithm(gens=500, population_size=100, genes=GENES, cipher=CIPHER,
-                      key_length=8, mutation_rate=0.5, crossover_randomness_rate=0.5)
-ga.run()
-# stop clock
-
+ga = GA(CIPHER, generateScore, population_size, max_generation, key_length)
+best_individual: Individual = ga.run()
+# end clock
 end_time = time.time()
-print(f"\nExecution Time: {end_time - start_time} seconds")
+
+key = "".join([str(i) for i in best_individual.key])
+
+print("\n-------------GA algorithm completed-------------\n")
+print("\nBest Key Found:")
+
+# Decrypt the ciphertext using the key found by PSO
+decrypt = transpositionCipher.TranspositionCipher().decrypt(CIPHER, key)
+print(f"\n\nDecryption Key: {key} \tfitness: {best_individual.fitness}\n")
+print(f"Decrypted Text: {decrypt}\n")
+
+# Print the time taken to run the algorithm
+print(f"Execution time of the algorithm: {end_time - start_time} seconds")

@@ -1,113 +1,99 @@
-from ciphers import transpositionCipher
+import copy
+import random
 from genetic_algorithm.individual import Individual
-from genetic_algorithm.population import Population
 
-
-class GeneticAlgorithm(object):
+class GA(object):
     '''
-    Genetic Algorithm to find the key of the transposition cipher
+    Genetic algorithm for breaking transposition cipher
     '''
 
-    def __init__(self, gens: int, population_size: int, cipher: str, key_length: int, genes: str, mutation_rate: float, crossover_randomness_rate: float) -> None:
-        self.gens = gens
-        self.population_size = population_size
+    def __init__(self, cipher: str, fitness_func: callable, population_size: int, max_generation: int, key_length: int, kmin: int = 1, kmax: int = 9, crossover_rate: float = 0.8) -> None:
         self.cipher = cipher
+        self.population_size = population_size
+        self.max_generation = max_generation
         self.key_length = key_length
-        self.genes = genes
-        self.mutation_rate = mutation_rate
-        self.crossover_randomness_rate = crossover_randomness_rate
-
-        self.key: str = ""
-        self.generation: int = 1
-        self.population = Population(size=self.population_size)
-
-    def check_fitness_plateau(self, generation_max_fitness: list[float]):
+        self.kmin = kmin
+        self.kmax = kmax
+        self.fitness_func = fitness_func
+        self.crossover_rate = crossover_rate
+        self.population = [Individual(self.cipher, self.fitness_func, self.key_length) for _ in range(self.population_size)]
+        self.best_individual = self.population[0]
+    
+    def info(self, generation: int, key: str, fitness: float) -> None:
         '''
-        Check if the fitness score is plateaued
+        print info about the algorithm
         '''
-        # find frequency of each fitness score
-        freq: dict[float, int] = {}
-
-        for fitness in generation_max_fitness:
-            # if fitness is not in dictionary,
-            # then add it to dictionary with count 1
-            if fitness not in freq:
-                freq[fitness] = 1
-            # if fitness is already in dictionary,
-            # then increment count by 1
-            else:
-                freq[fitness] += 1
-
-        # find max frequency of fitness score
-        max_freq: float = max(freq.keys())
-
-        # if max frequency is greater than equal to 50 then we have plateaued
-        if freq[max_freq] >= 1000:
-            print(freq)
-            print(generation_max_fitness)
-            return True
-        else:
-            return False
-
-    def info(self) -> None:
+        print(f"Generation = {generation}\t Key = {key}\t Best Fitness = {fitness}")
+    
+    # crossover function for genetic algorithm
+    def crossover(self, parent1: Individual, parent2: Individual) -> Individual:
         '''
-        Print info about the generation
+        crossover function for genetic algorithm
         '''
-        individual = self.population.max_fitness_individual
-        self.key = ''.join(individual.chromosome)
-        print(
-            f"Generation: {self.generation}\tKey: {self.key}\tFitness: {individual.fitness}")
+        # single point crossover
+        child = copy.deepcopy(parent1)
 
-    def run(self) -> None:
+        # crossover point
+        crossover_point = random.randint(0, self.key_length - 1)
+        # swap values after crossover point
+        for i in range(crossover_point, self.key_length):
+            key = parent2.key[i]
+            while key in child.key:
+                key = random.randint(self.kmin, self.kmax)
+            child.key[i] = key
+        
+        return child
+    
+    # mutate function for genetic algorithm
+    def mutate(self, individual: Individual) -> Individual:
         '''
-        Run the genetic algorithm
+        mutate function for genetic algorithm
         '''
+        # swap two random keys
+        key1 = random.randint(0, self.key_length - 1)
+        key2 = random.randint(0, self.key_length - 1)
+        individual.key[key1], individual.key[key2] = individual.key[key2], individual.key[key1]
 
-        # create initial population
-        self.population.initialize(self.genes, self.key_length)
+        return individual
+    
+    def run(self) -> Individual:
+        '''
+        run the genetic algorithm
+        '''
+        generation = 0
+        while generation < self.max_generation:
+            # sort the population
+            self.population.sort(key=lambda x: x.fitness, reverse=True)
+            
+            # update the best individual
+            if self.population[0].fitness > self.best_individual.fitness:
+                self.best_individual = self.population[0]
+            
+            # print info
+            key = ''.join([str(i) for i in self.best_individual.key])
+            self.info(generation, key, self.best_individual.fitness)
 
-        while self.generation < self.gens:
+            # create a new population
+            new_population: list[Individual] = list()
 
-            # Evaluate fitness of individuals of the population
-            self.population.evaluate_fitness(self.cipher)
+            # best individual included in new population
+            new_population.append(self.best_individual)
 
-            # Sort individuals in decreasing order of their fitness score
-            self.population.sort()
-
-            # crossover
-            new_population = self.population.crossover_population(
-                self.genes, self.key_length, self.crossover_randomness_rate)
-
-            # mutate
-            new_population.mutate(
-                self.genes, self.key_length, self.mutation_rate)
-
-            # Perform elitism
-            fittest_population: list[Individual] = self.population.elitism()
-
-            # add fittest population to new population
-            new_population.individuals.extend(fittest_population)
-
-            # info
-            self.info()
-
-            # assign new population
+            while len(new_population) < self.population_size:
+                # select two parents
+                parent1 = random.choice(self.population)
+                parent2 = random.choice(self.population)
+                # crossover
+                child = self.crossover(parent1, parent2)
+                # mutate
+                child = self.mutate(child)
+                # evaluate fitness
+                child.evaluate_fitness(self.cipher)
+                # add child to new population
+                new_population.append(child)
+            
+            # update population
             self.population = new_population
-
-            # increment generation
-            self.generation += 1
-
-        self.population.evaluate_fitness(self.cipher)
-
-        # print info about the generation
-        # fittest individual's info gets printed
-        self.info()
-
-        # fittest key
-        self.key = ''.join(self.population.max_fitness_individual.chromosome)
-
-        # Decrypt Using the key
-        decrypt = transpositionCipher.TranspositionCipher().decrypt(self.cipher, self.key)
-        print(
-            f"\n\nDecryption Key: {self.key} \tfitness: {self.population.max_fitness_individual.fitness}\n")
-        print(f"Decrypted Text: {decrypt}\n")
+            generation += 1
+        
+        return self.best_individual
