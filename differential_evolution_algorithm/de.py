@@ -31,18 +31,14 @@ class DE(object):
         mutant function for differential evolution algorithm
         '''
         mutant: Individual = copy.deepcopy(a)
-        i: int = 0
-        j: int = 0
-        k: int = -1
-        while i < self.key_length:
-            if random.random() < 0.4 and (b.key[j] not in mutant.key and mutant.key[i] != b.key[i]):
-                mutant.key[i] = b.key[j]
-                j+=1
-            elif random.random() < 0.8 and (c.key[k] not in mutant.key and mutant.key[i] != b.key[i]):
-                mutant.key[i] = c.key[k]
-                k-=1
-            
-            i+=1
+        for i in range(self.key_length):
+            key = b.key[i] + (c.key[i] - a.key[i])
+            if (key < self.kmin or key > self.kmax):
+                while key in mutant.key:
+                    if random.random() < 0.5:
+                        key = random.choice(b)
+                    else:
+                        key = random.choice(c)
         
         return mutant
 
@@ -67,6 +63,7 @@ class DE(object):
         '''
         crossover function for differential evolution algorithm
         '''
+        b: Individual = random.choice(self.population)
         crossover: Individual = copy.deepcopy(a)
         for i in range(self.key_length):
             key = a.key[i]
@@ -93,8 +90,8 @@ class DE(object):
                 
                 # create mutant
                 mutant = self.mutant(a, b, c)
-                if generation < 2 or generation > 98:
-                    print(f"Generation = {generation}\t mutant = {mutant.key}")
+                # if generation < 2 or generation > 98:
+                #     print(f"Generation = {generation}\t mutant = {mutant.key}")
                 
                 # create trial
                 trial = self.trial(mutant)
