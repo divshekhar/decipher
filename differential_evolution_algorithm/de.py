@@ -73,7 +73,7 @@ class DE(object):
 
         return crossover
     
-    def run(self) -> Individual:
+    def run(self, log: bool = False) -> Individual:
         '''
         run differential evolution algorithm
         '''
@@ -123,8 +123,9 @@ class DE(object):
                     self.best_individual = trial
             
             # print info about the algorithm
-            key = "".join([str(i) for i in self.best_individual.key])
-            self.info(generation, key, self.best_individual.fitness)
+            if log:
+                key = "".join([str(i) for i in self.best_individual.key])
+                self.info(generation, key, self.best_individual.fitness)
             
             # increment generation
             generation += 1
