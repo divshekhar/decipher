@@ -8,7 +8,7 @@ CIPHER: str = '''ic eotadt ii g,etoisqf kw pb nt neeBmlsnareedd ropdawuhslernnne
 
 key_length = 8
 population_size = 100
-max_generation = 500
+max_generation = 100
 
 print("\nBegin GA for finding transposition cipher key\n")
 print("Setting population_size = " + str(population_size))
@@ -18,7 +18,7 @@ print("\n-------------Starting GA algorithm-------------\n")
 # start clock
 start_time = time.time()
 ga = GA(CIPHER, generateScore, population_size, max_generation, key_length)
-best_individual: Individual = ga.run()
+best_individual: Individual = ga.run(log = True)
 # end clock
 end_time = time.time()
 
