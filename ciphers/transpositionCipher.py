@@ -14,7 +14,7 @@ class TranspositionCipher(object):
 
     @classmethod
     def encrypt(self, msg: str, key: str) -> str:
-        print(f"Key: {key}")
+        # print(f"Key: {key}")
 
         cipher: str = ""
 
