@@ -38,7 +38,7 @@ class JAYA(object):
             key = "".join([str(i) for i in self.best_individual.key])
             self.info(iteration, key, self.best_individual.fitness)
     
-    def run(self) -> Individual:
+    def run(self, log: bool = False) -> Individual:
         '''
         run jaya algorithm
         '''
@@ -75,7 +75,11 @@ class JAYA(object):
                 if updated_individual.fitness < self.worst_individual.fitness:
                     self.worst_individual = copy.deepcopy(updated_individual)
 
-            self.print_info(iteration)
+            # print info
+            if log:
+                self.print_info(iteration)
+            
+            # increment iteration
             iteration += 1
         
         return self.best_individual

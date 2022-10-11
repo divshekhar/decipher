@@ -33,14 +33,14 @@ class PSO(object):
         # print info about the algorithm
         print(f"Iteration = {iteration}\t Key = {key}\t Best Fitness = {fitness}")
 
-    def run(self) -> Particle:
+    def run(self, log: bool = False) -> Particle:
         # run pso algorithm
 
         iteration = 0
         while iteration <= self.max_iteration:
 
             # Print info every 10 iterations
-            if iteration % 10 == 0 and iteration > 1:
+            if log and (iteration % 10 == 0 and iteration > 1):
                 key = "".join([str(i) for i in self.gbest.position])
                 self.info(iteration, key, self.gbest.fitness)
 

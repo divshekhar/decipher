@@ -15,11 +15,11 @@ class Particle(object):
         self.fitness: float = 0.0
 
         # initialize position of the particle
-        self.position: list[int] = list()
-        while len(self.position) < key_length:
+        self.key: list[int] = list()
+        while len(self.key) < key_length:
             k: int = random.randint(kmin, kmax)
-            if k not in self.position:
-                self.position.append(k)
+            if k not in self.key:
+                self.key.append(k)
         
         # initialize velocity of the particle
         self.velocity: list[float] = [((vmax - vmin) * random.random() + vmin) for _ in range(key_length)]
@@ -31,7 +31,7 @@ class Particle(object):
         '''
         Evaluate fitness of the particle
         '''
-        key = "".join([str(i) for i in self.position])
+        key = "".join([str(i) for i in self.key])
         tc = transpositionCipher.TranspositionCipher()
         plaintext = tc.decrypt(cipher, key)
         self.fitness = self.fitness_func(plaintext)
@@ -49,8 +49,8 @@ class Particle(object):
             # Formula
             # self.velocity[i+1] = self.velocity[i] + c1 * r1 * (pbest.position[i] - self.position[i]) + c2 * r2 * (gbest.position[i] - self.position[i])
 
-            cognitive_velocity: float = c1 * r1 * (pbest.position[i] - self.position[i])
-            social_velocity: float = c2 * r2 * (gbest.position[i] - self.position[i])
+            cognitive_velocity: float = c1 * r1 * (pbest.key[i] - self.key[i])
+            social_velocity: float = c2 * r2 * (gbest.key[i] - self.key[i])
             self.velocity[i + 1] = (w * self.velocity[i]) + cognitive_velocity + social_velocity
 
     
@@ -59,20 +59,20 @@ class Particle(object):
         Update position of particle
         '''
         
-        for i in range(len(self.position) - 2):
-            # new position = old position + velocity
-            new_position = int(self.position[i] + self.velocity[i])
-            # check if new position is within bounds
-            if new_position > self.kmax or new_position < self.kmin:
-                # create new position within bounds
+        for i in range(len(self.key) - 2):
+            # new key = old key + velocity
+            new_key = int(self.key[i] + self.velocity[i])
+            # check if new key is within bounds
+            if new_key > self.kmax or new_key < self.kmin:
+                # create new key within bounds
                 key = random.randint(self.kmin, self.kmax)
-                # check if new position is already in position
-                while key in self.position:
+                # check if new key is already in key
+                while key in self.key:
                     key = random.randint(self.kmin, self.kmax)
-                # update position
-                new_position = key
+                # update key
+                new_key = key
         
-            self.position[i+1] = new_position
+            self.key[i+1] = new_key
         
         # Evaluate fitness of the particle
         self.evaluate_fitness(self.cipher)
@@ -83,13 +83,13 @@ class Particle(object):
         '''
 
         particle = copy.copy(self)
-        position = particle.position
+        position = particle.key
 
         # shift position
         offset: int = random.randint(2, len(position) - 2)
         
         # circular shift position
-        particle.position = position[offset:] + position[:offset]
+        particle.key = position[offset:] + position[:offset]
         
         # Evaluate fitness of the particle
         particle.evaluate_fitness(self.cipher)
@@ -102,10 +102,10 @@ class Particle(object):
         '''
 
         particle = copy.copy(self)
-        position = particle.position
+        position = particle.key
 
         # circular shift position
-        particle.position = position[offset:] + position[:offset]
+        particle.key = position[offset:] + position[:offset]
         
         # Evaluate fitness of the particle
         particle.evaluate_fitness(self.cipher)

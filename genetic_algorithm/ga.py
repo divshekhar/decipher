@@ -56,7 +56,7 @@ class GA(object):
 
         return individual
     
-    def run(self) -> Individual:
+    def run(self, log: bool = False) -> Individual:
         '''
         run the genetic algorithm
         '''
@@ -71,7 +71,9 @@ class GA(object):
             
             # print info
             key = ''.join([str(i) for i in self.best_individual.key])
-            self.info(generation, key, self.best_individual.fitness)
+
+            if log:
+                self.info(generation, key, self.best_individual.fitness)
 
             # create a new population
             new_population: list[Individual] = list()
