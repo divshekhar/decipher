@@ -25,32 +25,25 @@ def cipher_length_vs_execution_time(algo: Algorithm):
     max_iteration = 100
     key_length = 8
 
+    key = ''.join(str(k) for k in random_key(key_length))
+
     for cipher_length in CIPHER_LENGTHS:
 
+        # Encrypt the plaintext using the key
         text = get_plain_text(cipher_length)
+        cipher = TranspositionCipher().encrypt(text, key)
 
         execution_time_list: list[float] = list()
 
-        for i in range(3):
-
-            # create random key of length key_length
-            key = random_key(key_length)
-
-            key = ''.join(str(k) for k in key)
-            # Encrypt the plaintext using the key
-            cipher = TranspositionCipher().encrypt(text, key)
+        for _ in range(3):
 
             # create algorithm object
             algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
             # start clock
             start_time = time.time()
-            best_individual = algo_obj.run()
+            algo_obj.run()
             # end clock
             end_time = time.time()
-
-            # Decrypt the ciphertext using the key found by GA
-            key = "".join([str(i) for i in best_individual.key])
-            decrypt = TranspositionCipher().decrypt(cipher, key)
 
             # calculate time taken
             time_taken = end_time - start_time
@@ -77,20 +70,18 @@ def key_length_vs_execution_time(algo: Algorithm):
     max_iteration = 100
     cipher_length = 500
 
+    text = get_plain_text(cipher_length)
+    
     for key_length in KEY_LENGTHS:
 
-        text = get_plain_text(cipher_length)
+        # create random key of length key_length
+        key = ''.join(str(k) for k in random_key(key_length))
+        # Encrypt the plaintext using the key
+        cipher = TranspositionCipher().encrypt(text, key)
 
         execution_time_list: list[float] = list()
 
         for _ in range(3):
-
-            # create random key of length key_length
-            key = random_key(key_length)
-
-            key = ''.join(str(k) for k in key)
-            # Encrypt the plaintext using the key
-            cipher = TranspositionCipher().encrypt(text, key)
 
             # create algorithm object
             algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
@@ -125,20 +116,18 @@ def population_size_vs_execution_time(algo: Algorithm):
     cipher_length = 500
     key_length = 8
 
-    for population_size in POPULATION_SIZES:
+    text = get_plain_text(cipher_length)
 
-        text = get_plain_text(cipher_length)
+    # create random key of length key_length
+    key = ''.join(str(k) for k in random_key(key_length))
+    # Encrypt the plaintext using the key
+    cipher = TranspositionCipher().encrypt(text, key)
+
+    for population_size in POPULATION_SIZES:
 
         execution_time_list: list[float] = list()
 
         for _ in range(3):
-
-            # create random key of length key_length
-            key = random_key(key_length)
-
-            key = ''.join(str(k) for k in key)
-            # Encrypt the plaintext using the key
-            cipher = TranspositionCipher().encrypt(text, key)
 
             # create algorithm object
             algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
@@ -173,20 +162,18 @@ def max_iteration_vs_execution_time(algo: Algorithm):
     cipher_length = 500
     key_length = 8
 
-    for max_iteration in MAX_ITERATIONS:
+    text = get_plain_text(cipher_length)
+    key = random_key(key_length)
 
-        text = get_plain_text(cipher_length)
+    key = ''.join(str(k) for k in key)
+    # Encrypt the plaintext using the key
+    cipher = TranspositionCipher().encrypt(text, key)
+
+    for max_iteration in MAX_ITERATIONS:
 
         execution_time_list: list[float] = list()
 
         for _ in range(3):
-
-            # create random key of length key_length
-            key = random_key(key_length)
-
-            key = ''.join(str(k) for k in key)
-            # Encrypt the plaintext using the key
-            cipher = TranspositionCipher().encrypt(text, key)
 
             # create algorithm object
             algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
@@ -220,12 +207,12 @@ def cipher_length_vs_accuracy(algo: Algorithm):
     max_iteration = 100
     key_length = 8
 
+    key = ''.join(str(k) for k in random_key(key_length))
+
     for cipher_length in CIPHER_LENGTHS:
 
         text = get_plain_text(cipher_length)
-        key = random_key(key_length)
 
-        key = ''.join(str(k) for k in key)
         # Encrypt the plaintext using the key
         cipher = TranspositionCipher().encrypt(text, key)
 
@@ -273,10 +260,9 @@ def population_size_vs_accuracy(algo: Algorithm):
     cipher_length = 500
     key_length = 8
 
-    key = random_key(key_length)
     text = get_plain_text(cipher_length)
 
-    key = ''.join(str(k) for k in key)
+    key = ''.join(str(k) for k in random_key(key_length))
     # Encrypt the plaintext using the key
     cipher = TranspositionCipher().encrypt(text, key)
 
@@ -329,7 +315,7 @@ def max_iteration_vs_accuracy(algo: Algorithm):
     text = get_plain_text(cipher_length)
     key = random_key(key_length)
     
-    key = ''.join(str(k) for k in key)
+    key = ''.join(str(k) for k in random_key(key_length))
     # Encrypt the plaintext using the key
     cipher = TranspositionCipher().encrypt(text, key)
 
@@ -368,10 +354,10 @@ def max_iteration_vs_accuracy(algo: Algorithm):
 if __name__ == "__main__":
     algo: Algorithm = Algorithm.PSO
 
-    # cipher_length_vs_execution_time(algo)
+    cipher_length_vs_execution_time(algo)
     # key_length_vs_execution_time(algo)
     # population_size_vs_execution_time(algo)
     # max_iteration_vs_execution_time(algo)
     # population_size_vs_accuracy(algo)
     # max_iteration_vs_accuracy(algo)
-    cipher_length_vs_accuracy(algo)
+    # cipher_length_vs_accuracy(algo)
