@@ -41,7 +41,7 @@ class PSO(object):
 
             # Print info every 10 iterations
             if log and (iteration % 10 == 0 and iteration > 1):
-                key = "".join([str(i) for i in self.gbest.position])
+                key = "".join([str(i) for i in self.gbest.key])
                 self.info(iteration, key, self.gbest.fitness)
 
             for particle in self.swarm:
