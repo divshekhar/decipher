@@ -2,12 +2,33 @@
 
 Breaking transposition cipher using metaheuristic algorithms
 
-## Run
+## Analyze Algorithms
 
 ```python
-py test.py
+py analyze.py
 ```
 
-## Change ciphers
+## Run GA
 
-change the cipher, population size & key length in file `.\genetic_algorithm\units.py`.
+```python
+py test_ga.py
+```
+
+## Run PSO
+
+```python
+py test_pso.py
+```
+
+## Run JAYA
+
+```python
+py test_jaya.py
+```
+
+## Run DE
+
+```python
+py test_de.py
+```
+
