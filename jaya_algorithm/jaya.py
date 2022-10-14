@@ -54,13 +54,13 @@ class JAYA(object):
                 updated_individual = copy.deepcopy(individual)
 
                 # update key
-                for i in range(self.key_length):
+                for i in range(-1, self.key_length-1):
                     key: int = abs(individual.key[i] + self.individual_key_opmitization_factor(individual.key[i], i))
                     # Key out of bound condition & key duplication condition
                     while (key < self.kmin or key > self.kmax) or (key in updated_individual.key and key != individual.key[i]):
                         key = random.randint(self.kmin, self.kmax)
 
-                    updated_individual.key[i] = key
+                    updated_individual.key[i+1] = key
 
                 # evaluate fitness of updated individual
                 updated_individual.evaluate_fitness(self.cipher)
