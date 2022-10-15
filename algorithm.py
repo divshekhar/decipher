@@ -4,6 +4,8 @@ from genetic_algorithm.ga import GA
 from pso_algorithm.pso import PSO
 from jaya_algorithm.jaya import JAYA
 from differential_evolution_algorithm.de import DE
+from enhanced_jaya_algorithm.ejaya import EnhancedJAYA
+
 from dictionary.fitness import generateScore
 
 class Algorithm:
@@ -11,6 +13,7 @@ class Algorithm:
     PSO = 2
     JAYA = 3
     DE = 4
+    EJAYA = 5
 
     @staticmethod
     def get_algo(algo: Algorithm) -> str:
@@ -22,6 +25,8 @@ class Algorithm:
             return "JAYA"
         elif algo == Algorithm.DE:
             return "DE"
+        elif algo == Algorithm.EJAYA:
+            return "EJAYA"
         else:
             return "Unknown"
     
@@ -36,5 +41,7 @@ class Algorithm:
             return JAYA(cipher,generateScore,population_size,max_iteration,key_length)
         elif algo == Algorithm.DE:
             return DE(cipher,generateScore,population_size,max_iteration,key_length)
+        elif algo == Algorithm.EJAYA:
+            return EnhancedJAYA(cipher,generateScore,population_size,max_iteration,key_length)
         else:
             return None

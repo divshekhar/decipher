@@ -352,11 +352,11 @@ def max_iteration_vs_accuracy(algo: Algorithm):
         print("----------------------------")
 
 if __name__ == "__main__":
-    algo: Algorithm = Algorithm.PSO
+    algo: Algorithm = Algorithm.EJAYA
 
-    cipher_length_vs_execution_time(algo)
+    # cipher_length_vs_execution_time(algo)
     # key_length_vs_execution_time(algo)
-    # population_size_vs_execution_time(algo)
+    population_size_vs_execution_time(algo)
     # max_iteration_vs_execution_time(algo)
     # population_size_vs_accuracy(algo)
     # max_iteration_vs_accuracy(algo)

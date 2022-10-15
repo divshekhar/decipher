@@ -8,7 +8,8 @@ from plain_text import get_plain_text
 # algo: Algorithm = Algorithm.GA
 # algo: Algorithm = Algorithm.PSO
 # algo: Algorithm = Algorithm.JAYA
-algo: Algorithm = Algorithm.DE
+# algo: Algorithm = Algorithm.DE
+algo: Algorithm = Algorithm.EJAYA
 algo_str: str = Algorithm.get_algo(algo)
 
 key_length = 8
@@ -48,7 +49,7 @@ print("\nBest Key Found:")
 
 # Decrypt the ciphertext using the key found by PSO
 decrypt = TranspositionCipher().decrypt(CIPHER, decryption_key)
-print(f"\nDecryption Key: {decryption_key} \tfitness: {best_individual.fitness}\n")
+print(f"\n\nDecryption Key: {decryption_key} \tfitness: {best_individual.fitness}\n")
 print(f"Decrypted Text: {decrypt}\n")
 
 # Print the time taken to run the algorithm
