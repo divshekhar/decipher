@@ -50,12 +50,15 @@ class JAYA(object):
         while iteration <= self.max_iteration:
             
             for idx in range(self.population_size):
-                individual: Individual = copy.deepcopy(self.population[idx])
+                individual: Individual = self.population[idx]
                 updated_individual = copy.deepcopy(individual)
 
                 # update key
                 for i in range(-1, self.key_length-1):
-                    key: int = abs(individual.key[i] + self.individual_key_opmitization_factor(individual.key[i], i))
+                    r1, r2 = random.random(), random.random()
+                    toward_best_solution = r1 * (self.best_individual.key[i] - individual.key[i])
+                    away_from_worst_solution = r2 * (self.worst_individual.key[i] - individual.key[i])
+                    key: int = int(individual.key[i] + toward_best_solution + away_from_worst_solution)
                     # Key out of bound condition & key duplication condition
                     while (key < self.kmin or key > self.kmax) or (key in updated_individual.key and key != individual.key[i]):
                         key = random.randint(self.kmin, self.kmax)
