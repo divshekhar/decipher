@@ -1,3 +1,4 @@
+from audioop import reverse
 import time
 from algorithm import Algorithm
 from ciphers.transpositionCipher import TranspositionCipher
@@ -9,7 +10,8 @@ CIPHER_LENGTHS = [100, 500, 1000, 2000]
 KEY_LENGTHS = [5, 6, 7, 8]
 POPULATION_SIZES = [10, 50, 100]
 MAX_ITERATIONS = [100, 200, 300, 400, 500]
-MEAN_VALUE = 3
+OBSERVATION_NUMBER = 3
+
 
 def cipher_length_vs_execution_time(algo: Algorithm):
 
@@ -35,10 +37,11 @@ def cipher_length_vs_execution_time(algo: Algorithm):
 
         execution_time_list: list[float] = list()
 
-        for _ in range(3):
+        for _ in range(OBSERVATION_NUMBER):
 
             # create algorithm object
-            algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
+            algo_obj = Algorithm.get_algo_obj(
+                algo, cipher, population_size, max_iteration, key_length)
             # start clock
             start_time = time.time()
             algo_obj.run()
@@ -52,9 +55,14 @@ def cipher_length_vs_execution_time(algo: Algorithm):
         execution_time = sum(execution_time_list) / len(execution_time_list)
 
         print(f"Cipher length: {cipher_length}")
+        print(f"Total no. of observations: {OBSERVATION_NUMBER}")
         print("----------------------------")
-        print(f"Execution Time = {execution_time}")
+        print(f"Average Execution Time = {execution_time}")
         print("----------------------------")
+        best_execution_time = sorted(execution_time_list)[0]
+        print(f"Best Execution Time = {best_execution_time}")
+        print("------------***-------------")
+
 
 def key_length_vs_execution_time(algo: Algorithm):
 
@@ -71,7 +79,7 @@ def key_length_vs_execution_time(algo: Algorithm):
     cipher_length = 500
 
     text = get_plain_text(cipher_length)
-    
+
     for key_length in KEY_LENGTHS:
 
         # create random key of length key_length
@@ -81,10 +89,11 @@ def key_length_vs_execution_time(algo: Algorithm):
 
         execution_time_list: list[float] = list()
 
-        for _ in range(3):
+        for _ in range(OBSERVATION_NUMBER):
 
             # create algorithm object
-            algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
+            algo_obj = Algorithm.get_algo_obj(
+                algo, cipher, population_size, max_iteration, key_length)
             # start clock
             start_time = time.time()
             algo_obj.run()
@@ -98,9 +107,14 @@ def key_length_vs_execution_time(algo: Algorithm):
         execution_time = sum(execution_time_list) / len(execution_time_list)
 
         print(f"Key length: {key_length}")
+        print(f"Total no. of observations: {OBSERVATION_NUMBER}")
         print("----------------------------")
-        print(f"Execution Time = {execution_time}")
+        print(f"Average Execution Time = {execution_time}")
         print("----------------------------")
+        best_execution_time = sorted(execution_time_list)[0]
+        print(f"Best Execution Time = {best_execution_time}")
+        print("------------***-------------")
+
 
 def population_size_vs_execution_time(algo: Algorithm):
 
@@ -130,7 +144,8 @@ def population_size_vs_execution_time(algo: Algorithm):
         for _ in range(3):
 
             # create algorithm object
-            algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
+            algo_obj = Algorithm.get_algo_obj(
+                algo, cipher, population_size, max_iteration, key_length)
             # start clock
             start_time = time.time()
             algo_obj.run()
@@ -144,9 +159,14 @@ def population_size_vs_execution_time(algo: Algorithm):
         execution_time = sum(execution_time_list) / len(execution_time_list)
 
         print(f"Population Size: {population_size}")
+        print(f"Total no. of observations: {OBSERVATION_NUMBER}")
         print("----------------------------")
         print(f"Execution Time = {execution_time}")
         print("----------------------------")
+        best_execution_time = sorted(execution_time_list)[0]
+        print(f"Best Execution Time = {best_execution_time}")
+        print("------------***-------------")
+
 
 def max_iteration_vs_execution_time(algo: Algorithm):
 
@@ -173,10 +193,11 @@ def max_iteration_vs_execution_time(algo: Algorithm):
 
         execution_time_list: list[float] = list()
 
-        for _ in range(3):
+        for _ in range(OBSERVATION_NUMBER):
 
             # create algorithm object
-            algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
+            algo_obj = Algorithm.get_algo_obj(
+                algo, cipher, population_size, max_iteration, key_length)
             # start clock
             start_time = time.time()
             algo_obj.run()
@@ -190,9 +211,14 @@ def max_iteration_vs_execution_time(algo: Algorithm):
         execution_time = sum(execution_time_list) / len(execution_time_list)
 
         print(f"Max Iteration: {max_iteration}")
+        print(f"Total no. of observations: {OBSERVATION_NUMBER}")
         print("----------------------------")
-        print(f"Execution Time = {execution_time}")
+        print(f"Average Execution Time = {execution_time}")
         print("----------------------------")
+        best_execution_time = sorted(execution_time_list)[0]
+        print(f"Best Execution Time = {best_execution_time}")
+        print("------------***-------------")
+
 
 def cipher_length_vs_accuracy(algo: Algorithm):
     # identify the algorithm
@@ -218,10 +244,11 @@ def cipher_length_vs_accuracy(algo: Algorithm):
 
         correct_characters_list: list[int] = list()
 
-        for _ in range(3):
+        for _ in range(OBSERVATION_NUMBER):
 
             # create algorithm object
-            algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
+            algo_obj = Algorithm.get_algo_obj(
+                algo, cipher, population_size, max_iteration, key_length)
             best_individual = algo_obj.run()
 
             # Decrypt the ciphertext using the key
@@ -237,14 +264,23 @@ def cipher_length_vs_accuracy(algo: Algorithm):
             # calculate accuracy
             correct_characters_list.append(correct)
 
-        correct_characters = sum(correct_characters_list) / len(correct_characters_list)
-        accuracy = (correct_characters / cipher_length) * 100 
+        correct_characters = sum(correct_characters_list) / \
+            len(correct_characters_list)
+        accuracy = (correct_characters / cipher_length) * 100
 
         print(f"Cipher length: {cipher_length}")
+        print(f"Total no. of observations: {OBSERVATION_NUMBER}")
         print("----------------------------")
         print(f"Correct characters: {correct_characters}")
         print(f"Accuracy = {accuracy}%")
         print("----------------------------")
+        best_correct_character_count = sorted(
+            correct_characters_list, reverse=True)[0]
+        best_accuracy = best_correct_character_count / cipher_length * 100
+        print(f"Best Correct Character Count = {best_correct_character_count}")
+        print(f"Best Accuracy = {best_accuracy}%")
+        print("------------***-------------")
+
 
 def population_size_vs_accuracy(algo: Algorithm):
 
@@ -270,10 +306,11 @@ def population_size_vs_accuracy(algo: Algorithm):
 
         correct_characters_list: list[float] = list()
 
-        for _ in range(3):
+        for _ in range(OBSERVATION_NUMBER):
 
             # create algorithm object
-            algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
+            algo_obj = Algorithm.get_algo_obj(
+                algo, cipher, population_size, max_iteration, key_length)
             best_individual = algo_obj.run()
 
             # Decrypt the ciphertext using the key
@@ -289,14 +326,23 @@ def population_size_vs_accuracy(algo: Algorithm):
             # calculate accuracy
             correct_characters_list.append(correct)
 
-        correct_characters = sum(correct_characters_list) / len(correct_characters_list)
-        accuracy = (correct_characters / cipher_length) * 100 
+        correct_characters = sum(correct_characters_list) / \
+            len(correct_characters_list)
+        accuracy = (correct_characters / cipher_length) * 100
 
         print(f"Population Size: {population_size}")
+        print(f"Total no. of observations: {OBSERVATION_NUMBER}")
         print("----------------------------")
-        print(f"Correct characters: {correct_characters}")
-        print(f"Accuracy = {accuracy}%")
+        print(f"Average Correct characters: {correct_characters}")
+        print(f"Average Accuracy = {accuracy}%")
         print("----------------------------")
+        best_correct_character_count = sorted(
+            correct_characters_list, reverse=True)[0]
+        best_accuracy = best_correct_character_count / cipher_length * 100
+        print(f"Best Correct Character Count = {best_correct_character_count}")
+        print(f"Best Accuracy = {best_accuracy}%")
+        print("------------***-------------")
+
 
 def max_iteration_vs_accuracy(algo: Algorithm):
 
@@ -314,7 +360,7 @@ def max_iteration_vs_accuracy(algo: Algorithm):
 
     text = get_plain_text(cipher_length)
     key = random_key(key_length)
-    
+
     key = ''.join(str(k) for k in random_key(key_length))
     # Encrypt the plaintext using the key
     cipher = TranspositionCipher().encrypt(text, key)
@@ -323,10 +369,11 @@ def max_iteration_vs_accuracy(algo: Algorithm):
 
         correct_characters_list: list[float] = list()
 
-        for _ in range(3):
+        for _ in range(OBSERVATION_NUMBER):
 
             # create algorithm object
-            algo_obj = Algorithm.get_algo_obj(algo, cipher, population_size, max_iteration, key_length)
+            algo_obj = Algorithm.get_algo_obj(
+                algo, cipher, population_size, max_iteration, key_length)
             best_individual = algo_obj.run()
 
             # Decrypt the ciphertext using the key
@@ -342,22 +389,31 @@ def max_iteration_vs_accuracy(algo: Algorithm):
             # calculate accuracy
             correct_characters_list.append(correct)
 
-        correct_characters = sum(correct_characters_list) / len(correct_characters_list)
-        accuracy = (correct_characters / cipher_length) * 100 
+        correct_characters = sum(correct_characters_list) / \
+            len(correct_characters_list)
+        accuracy = (correct_characters / cipher_length) * 100
 
         print(f"Max Iteration: {max_iteration}")
+        print(f"Total no. of observations: {OBSERVATION_NUMBER}")
         print("----------------------------")
-        print(f"Correct characters: {correct_characters}")
-        print(f"Accuracy = {accuracy}%")
+        print(f"Average Correct characters: {correct_characters}")
+        print(f"Average Accuracy = {accuracy}%")
         print("----------------------------")
+        best_correct_character_count = sorted(
+            correct_characters_list, reverse=True)[0]
+        best_accuracy = best_correct_character_count / cipher_length * 100
+        print(f"Best Correct Character Count = {best_correct_character_count}")
+        print(f"Best Accuracy = {best_accuracy}%")
+        print("------------***-------------")
+
 
 if __name__ == "__main__":
-    algo: Algorithm = Algorithm.EJAYA
+    algo: Algorithm = Algorithm.JAYA
 
     # cipher_length_vs_execution_time(algo)
     # key_length_vs_execution_time(algo)
-    population_size_vs_execution_time(algo)
+    # population_size_vs_execution_time(algo)
     # max_iteration_vs_execution_time(algo)
     # population_size_vs_accuracy(algo)
     # max_iteration_vs_accuracy(algo)
-    # cipher_length_vs_accuracy(algo)
+    cipher_length_vs_accuracy(algo)
